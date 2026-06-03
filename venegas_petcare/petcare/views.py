@@ -28,3 +28,30 @@ class MascotasViewSet(viewsets.ModelViewSet):
         if self.action == "list":
             return [AllowAny()]
         return super().get_permissions()
+    
+class Vacunas(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        mascotas = request.data.get("mascotas", [])
+
+        for mascota in mascotas:
+            nombre = mascota.get("nombre")
+            peso_kg = mascota.get("peso_kg")
+
+        total_cobro= 0
+        detalle = []
+        
+        for mascota in mascotas:
+            nombre = mascota.get("nombre")
+            peso_kg = mascota.get("peso_kg")
+
+            if peso_kg < 5:
+                costo = 10
+            elif 5 <= peso_kg <= 20:
+                costo = 20
+            else:
+                costo = 30
+
+            total_cobro += costo
+            detalle.append({"nombre": nombre, "costo": costo})

@@ -1,0 +1,282 @@
+{
+	"info": {
+		"_postman_id": "65e42509-073e-4d5f-9f8c-9d7d81fa67ec",
+		"name": "Petcare API (Django + Postgres + JWT )",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "49903762",
+		"_collection_link": "https://aliliseth2006-8d60d7d5-7752191.postman.co/workspace/Alison-Venegas's-Workspace~3449516e-6b94-47ae-8695-ec9d20d6e77e/collection/49903762-65e42509-073e-4d5f-9f8c-9d7d81fa67ec?action=share&source=collection_link&creator=49903762"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register (Public) - POST /api/auth/register/",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"user1\",\n  \"email\": \"user1@mail.com\",\n  \"password\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/register/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login (JWT) - POST /api/auth/login/ (save tokens)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"let jsonData = {};",
+									"try { jsonData = pm.response.json(); } catch (e) {}",
+									"",
+									"if (jsonData.access) {",
+									"  pm.collectionVariables.set('accessToken', jsonData.access);",
+									"  pm.environment.set('accessToken', jsonData.access);",
+									"}",
+									"",
+									"if (jsonData.refresh) {",
+									"  pm.collectionVariables.set('refreshToken', jsonData.refresh);",
+									"  pm.environment.set('refreshToken', jsonData.refresh);",
+									"}",
+									"",
+									"pm.test('Token access recibido', function () {",
+									"  pm.expect(jsonData.access).to.be.a('string');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh (JWT) - POST /api/auth/refresh/ (save access)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"let jsonData = {};",
+									"try { jsonData = pm.response.json(); } catch (e) {}",
+									"if (jsonData.access) pm.collectionVariables.set('accessToken', jsonData.access);",
+									"pm.test('Token access refrescado', function () { pm.expect(jsonData.access).to.be.a('string'); });"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"refresh\": \"{{refreshToken}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/refresh/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"refresh",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Postgres - Especies",
+			"item": [
+				{
+					"name": "List especies (Admin token) - GET /api/especies/",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/marcas/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"marcas",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create especies (Admin) - POST /api/especies/",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Toyota\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/marcas/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"marcas",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Postgres - Mascotas",
+			"item": [
+				{
+					"name": "List mascotas(Public) - GET /api/mascotas/",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/vehiculos/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"vehiculos",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create mascota (Admin) - POST /api/mascotas/",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": 1,\n  \"chip\": \"003\",\n  \"peso_kg\": 157,\n  \"edad\": 2,\n  \"estado_vacunada\": true\n\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/mascotas/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"mascotas",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://127.0.0.1:8000"
+		},
+		{
+			"key": "accessToken",
+			"value": ""
+		},
+		{
+			"key": "refreshToken",
+			"value": ""
+		},
+		{
+			"key": "serviceTypeId",
+			"value": ""
+		},
+		{
+			"key": "vehicleServiceId",
+			"value": ""
+		}
+	]
+}

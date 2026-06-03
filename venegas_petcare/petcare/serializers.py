@@ -19,3 +19,4 @@ class MascotasSerializer(serializers.ModelSerializer):
         if isinstance(obj, dict):
             return 0
         return obj.nombre.mascotas.count()
+    
